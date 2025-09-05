@@ -25,23 +25,34 @@ SECRET_KEY = 'django-insecure-(64y5xx@-%d!=&4s6b8ex-k!$4wuyc-ku8p6sh3m+w&_ss@p$o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# 允许的接收请求的主机：用户的请求到了这个server,Django会解析请求的host头，
+# 要求host头必须是在下面的列表中，否则爆出异常 DisallowedHost
+ALLOWED_HOSTS = [ # server部署机器的 IP
+    'localhost', 
+    '127.0.0.1',
+    '192.168.0.102', 
+    'a2.richudongfang1642.cn',
+    '[::1]',          # IPv6 localhost
+]
 
 
 # Application definition
 
+# 默认安装的app 都是Django提供的开箱即用的组件，非常方便
+# 当你开发自己app模块时，也要添加到这里，才能呗Django感知到
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.admin', #  Django 自带的 后台管理界面
+    'django.contrib.auth', #  用户认证系统
+    'django.contrib.contenttypes', # 
+    'django.contrib.sessions', # 会话管理
+    'django.contrib.messages', # 消息框架
+    'django.contrib.staticfiles', # 静态文件管理（CSS/JS/图片等）
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -102,12 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'zh-hans'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
