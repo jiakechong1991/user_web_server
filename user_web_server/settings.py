@@ -49,8 +49,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', # 静态文件管理（CSS/JS/图片等）
     # 第三方auth模块，对支持用户认证支持非常完善
     'allauth',
-    'allauth.account',
+    'allauth.account',  # 这些app都是自带有自己的模板的，django都会自动导入
     #'allauth.socialaccount.providers.weixin',
+    
+    ###我们自己的app(app_name.apps.AppLearnConfig[apps.py里的类名])
+    'app_learn.apps.AppLearnConfig'  
 ]
 
 MIDDLEWARE = [
@@ -68,7 +71,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'user_web_server.urls'
 
-
+SITE_ID = 1
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -77,18 +80,18 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-TEMPLATES = [
+TEMPLATES = [  # 网站的模板配置
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [BASE_DIR / 'templates'], # 全局 (公共)模板目录
+        'APP_DIRS': True, #  Django 会自动去每个已注册 App 里找 templates/ 子目录
         'OPTIONS': {
+            # Django 会在渲染任何模板前，依次调用这些函数，把它们返回的字典合并到你的上下文中
+            # 这样你就能在模板里引用这些变量，例如 user,messages, request等常用的上下文变量
             'context_processors': [
-                'django.template.context_processors.request',
+                'django.template.context_processors.request', # `allauth` needs this from django
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # `allauth` needs this from django
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -131,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'zh-hans'
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'Asia/Shanghai'  # 时区
 
 USE_I18N = True
 USE_L10N = True

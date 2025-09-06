@@ -20,5 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    # path需要两个入参：route字符串和view函数
+    path('app_learn/', include('app_learn.urls')),
 
 ]
