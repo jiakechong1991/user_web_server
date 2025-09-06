@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions', # 会话管理
     'django.contrib.messages', # 消息框架
     'django.contrib.staticfiles', # 静态文件管理（CSS/JS/图片等）
+    # 第三方auth模块，对支持用户认证支持非常完善
+    'allauth',
+    'allauth.account',
+    #'allauth.socialaccount.providers.weixin',
 ]
 
 MIDDLEWARE = [
@@ -58,9 +62,20 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'user_web_server.urls'
+
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 TEMPLATES = [
     {
@@ -72,6 +87,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
