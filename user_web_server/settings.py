@@ -76,13 +76,14 @@ ROOT_URLCONF = 'user_web_server.urls'
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'  # 登录成功后跳转的页面
-# 指定要使用的登录方法(用户名、电子邮件地址两者之一)
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# 指定要使用的登录方法(用户名、电子邮件地址两者之一) # username_email
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
 # 要求用户注册时必须填写email
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 
 # 注册中邮件验证方法: "强制(mandatory)"、 "可选(optional)" 或 "否(none)" 之一 ,(注册成功后，会发送一封验证邮件，用户必须验证邮箱后，才能登陆)
-ACCOUNT_EMAIL_VERIFICATION ="optional"
+ACCOUNT_EMAIL_VERIFICATION ="none"
 ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180 # 邮箱验证的冷却时间，单位为秒，默认为 180 秒
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS =3 # 邮箱验证的过期时间，单位为天，默认为 3 天
 
