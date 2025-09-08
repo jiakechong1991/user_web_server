@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from user.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +24,4 @@ urlpatterns = [
 
     # path需要两个入参：route字符串和view函数
     path('app_learn/', include('app_learn.urls')),
-    path('', home, name='home'),  # 这一行映射根路径
 ]

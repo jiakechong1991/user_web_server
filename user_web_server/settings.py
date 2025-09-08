@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     
     ###我们自己的app(app_name.apps.AppLearnConfig[apps.py里的类名])
     'app_learn.apps.AppLearnConfig',
-    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
