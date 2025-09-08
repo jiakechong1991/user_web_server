@@ -57,6 +57,8 @@ INSTALLED_APPS = [
     # rest_framework框架，转为提供api风格的权限接口
     'rest_framework',  # DRF：提供 API 能力
     'rest_framework.authtoken',  # DRF 的 Token 认证支持
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'dj_rest_auth',  # 基于 DRF，提供 login/logout 接口
     'dj_rest_auth.registration', # 提供注册接口
     
@@ -82,11 +84,27 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',  # 
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # 使用 JWT
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',  # 
+        'rest_framework.permissions.IsAuthenticated',
     ],
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    # access token 一旦签发，在过期前默认始终有效（除非加入黑名单）
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),   # Access Token（访问令牌）的有效期： 7天后过期
+    # 用户登录时获得的 refresh token 可以用来换取新的 access token，最长可用 14 天
+    # 当 access token 过期后，客户端可以用 refresh token 向服务器请求一个新的 access token
+    # refresh token 更敏感！一旦泄露，必须配合黑名单机制使用，才能实现“登出即失效”
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7), # 刷新Token有效期（可选）
+    'ROTATE_REFRESH_TOKENS': True,
+    # 每次使用 refresh token 换取新 token 后，旧的 refresh token 和它对应的 access token 都会被记录到数据库黑名单中
+    'BLACKLIST_AFTER_ROTATION': True,  # 启用黑名单（需 migrate）
+    'UPDATE_LAST_LOGIN': True,
+    'BLACKLIST_TOKEN_CHECKS': ['rest_framework_simplejwt.token_blacklist.validators.BlacklistValidator'],
 }
 
 ROOT_URLCONF = 'user_web_server.urls'
