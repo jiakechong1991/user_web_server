@@ -41,19 +41,22 @@ ALLOWED_HOSTS = [ # server部署机器的 IP
 # 默认安装的app 都是Django提供的开箱即用的组件，非常方便
 # 当你开发自己app模块时，也要添加到这里，才能呗Django感知到
 INSTALLED_APPS = [
-    'django.contrib.admin', #  Django 自带的 后台管理界面
+    'django.contrib.admin', #  提供 Django 自带的 后台管理界面
     'django.contrib.auth', #  用户认证系统
     'django.contrib.contenttypes', # 
     'django.contrib.sessions', # 会话管理
     'django.contrib.messages', # 消息框架
     'django.contrib.staticfiles', # 静态文件管理（CSS/JS/图片等）
     # 第三方auth模块，对支持用户认证支持非常完善
+    'django.contrib.sites', # 因为django-allauth 需要使用site模型存储站点信息
     'allauth',
     'allauth.account',  # 这些app都是自带有自己的模板的，django都会自动导入
-    #'allauth.socialaccount.providers.weixin',
+    'allauth.socialaccount',  #  requires install using `django-allauth[socialaccount]`.
+    'allauth.socialaccount.providers.weixin', # include the providers you want to enable:
     
     ###我们自己的app(app_name.apps.AppLearnConfig[apps.py里的类名])
-    'app_learn.apps.AppLearnConfig'  
+    'app_learn.apps.AppLearnConfig',
+    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
@@ -72,11 +75,22 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'user_web_server.urls'
 
 SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'  # 登录成功后跳转的页面
+# 指定要使用的登录方法(用户名、电子邮件地址两者之一)
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+# 要求用户注册时必须填写email
+ACCOUNT_EMAIL_REQUIRED = True
+
+# 注册中邮件验证方法: "强制(mandatory)"、 "可选(optional)" 或 "否(none)" 之一 ,(注册成功后，会发送一封验证邮件，用户必须验证邮箱后，才能登陆)
+ACCOUNT_EMAIL_VERIFICATION ="optional"
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180 # 邮箱验证的冷却时间，单位为秒，默认为 180 秒
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS =3 # 邮箱验证的过期时间，单位为天，默认为 3 天
+
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
+    # 用于 Admin 和原生认证
     'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by email
+    # allauth 前台登录支持
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
@@ -96,6 +110,20 @@ TEMPLATES = [  # 网站的模板配置
         },
     },
 ]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': ''
+        }
+    }
+}
 
 WSGI_APPLICATION = 'user_web_server.wsgi.application'
 
