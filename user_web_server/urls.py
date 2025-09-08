@@ -21,8 +21,9 @@ from user.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
     # path需要两个入参：route字符串和view函数
     path('app_learn/', include('app_learn.urls')),
     path('', home, name='home'),  # 这一行映射根路径
-
 ]

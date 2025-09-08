@@ -54,6 +54,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',  #  requires install using `django-allauth[socialaccount]`.
     'allauth.socialaccount.providers.weixin', # include the providers you want to enable:
     
+    # rest_framework框架，转为提供api风格的权限接口
+    'rest_framework',
+    
     ###我们自己的app(app_name.apps.AppLearnConfig[apps.py里的类名])
     'app_learn.apps.AppLearnConfig',
     'user.apps.UserConfig'
@@ -68,9 +71,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+    # allauth模块的中间件
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 ROOT_URLCONF = 'user_web_server.urls'
 
