@@ -95,7 +95,7 @@ from datetime import timedelta
 
 SIMPLE_JWT = {
     # access token 一旦签发，在过期前默认始终有效（除非加入黑名单）
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),   # Access Token（访问令牌）的有效期： 7天后过期
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),   # Access Token（访问令牌）的有效期： 15后过期
     # 用户登录时获得的 refresh token 可以用来换取新的 access token，最长可用 14 天
     # 当 access token 过期后，客户端可以用 refresh token 向服务器请求一个新的 access token
     # refresh token 更敏感！一旦泄露，必须配合黑名单机制使用，才能实现“登出即失效”
