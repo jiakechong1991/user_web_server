@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-
+    path('admin/', admin.site.urls),  # 后台管理
+    path('accounts/', include('allauth.urls')),  # web端登录注册
+    path('api-auth/', include('rest_framework.urls')), # DRF 自带的登录页面（用于调试）
+    path('api/auth/', include('dj_rest_auth.urls')), # 真正的 API 登录接口
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     # path需要两个入参：route字符串和view函数
+    path('api/accounts/', include('accounts.urls')),
     path('app_learn/', include('app_learn.urls')),
 ]

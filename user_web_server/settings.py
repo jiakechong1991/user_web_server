@@ -55,10 +55,14 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.weixin', # include the providers you want to enable:
     
     # rest_framework框架，转为提供api风格的权限接口
-    'rest_framework',
+    'rest_framework',  # DRF：提供 API 能力
+    'rest_framework.authtoken',  # DRF 的 Token 认证支持
+    'dj_rest_auth',  # 基于 DRF，提供 login/logout 接口
+    'dj_rest_auth.registration', # 提供注册接口
     
     ###我们自己的app(app_name.apps.AppLearnConfig[apps.py里的类名])
-    'app_learn.apps.AppLearnConfig',
+    'app_learn',  # 学习app
+    'accounts', # 用户管理app
 ]
 
 MIDDLEWARE = [
@@ -77,12 +81,19 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # 
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        'rest_framework.permissions.IsAuthenticated',  # 
+    ],
 }
 
 ROOT_URLCONF = 'user_web_server.urls'
+
+# 自定义用户模型
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'  # 登录成功后跳转的页面
