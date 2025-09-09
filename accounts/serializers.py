@@ -8,7 +8,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     # 可选：暴露 user 的部分字段，比如 username（手机号）
     username = serializers.CharField(source='user.username', read_only=True)
     # 如果你想允许修改昵称，也可以暴露 nickname 字段（它在 UserProfile 里）
-    
+    avatar = serializers.ImageField(use_url=True)
     class Meta:
         model = UserProfile
         fields = [

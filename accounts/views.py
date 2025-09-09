@@ -11,6 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
 from .serializers import UserProfileSerializer
+from .models import UserProfile
 # Create your views here.
 
 
@@ -58,8 +59,17 @@ class UserProfileAPIView(APIView):
 
     def get_object(self):
         # 获取当前用户的 UserProfile，不存在则返回 404（理论上不会，因为信号已自动创建）
-        return get_object_or_404(self.request.user, profile__isnull=False).profile
-
+        try:
+            return self.request.user.profile
+        except UserProfile.DoesNotExist:
+            # 双重保险：万一信号没触发，这里手动创建
+            return UserProfile.objects.create(
+                user=self.request.user,
+                nickname=f"用户{self.request.user.username[-4:]}",
+                sex='m',
+                birthday='1990-01-01',
+                signature="这家伙很懒，什么也没留下~"
+            )
     def get(self, request, *args, **kwargs):
         """读取当前用户资料"""
         profile = self.get_object()

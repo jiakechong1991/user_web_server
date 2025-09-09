@@ -213,7 +213,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'static/'  # 网站项目的静态资源
+# 这是用户上传的媒体文件
+MEDIA_URL = '/media/' # 媒体文件访问的URL前缀
+MEDIA_ROOT = BASE_DIR / 'media'  # 相当于存储位置是 项目的media文件夹下
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
