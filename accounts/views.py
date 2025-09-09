@@ -18,12 +18,19 @@ def user_profile(request):
     user = request.user
     return Response({
         'usrename': user.username,
-        'nickname': user.nickname,
         'date_joined': user.date_joined
     })
-    
-# accounts/views.py
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def access_token_check(request):
+    """一个简单的高速接口，帮助测试 access token 是否有效"""
+    user = request.user
+    return Response({
+        'usrename': user.username,
+        'token_flat': "access_token有效"
+    })
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]

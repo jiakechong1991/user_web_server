@@ -12,7 +12,7 @@ def validate_mobile(value):
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, password, nickname=None, email=None):
+    def create_user(self, username, password, email=None):
         if not username:
             raise ValueError('必须提供手机号')
 
@@ -20,18 +20,16 @@ class CustomUserManager(BaseUserManager):
 
         user = self.model(
             username=username,
-            nickname=nickname,
             email=email
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password, nickname=None, email=None):
+    def create_superuser(self, username, password, email=None):
         user = self.create_user(
             username=username,
             password=password,
-            nickname=nickname,
             email=email or f'{username}@admin.local'
         )
         user.is_staff = True
@@ -39,7 +37,8 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
+# django只提供了“骨架”用户模型(AbstractBaseUser)， 但是不包含创建用户方法， 
+# 创建用户模型时，需要继承 AbstractBaseUser， 也必须继承后user的Manager类，辅助创建用户
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     # ✅ 唯一字段：username，既是登录账号，也是手机号
     username = models.CharField(
@@ -49,15 +48,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         help_text="请输入11位中国大陆手机号",
         validators=[validate_mobile]  # 强制格式校验
     )
-
-    nickname = models.CharField(max_length=50, blank=True, null=True, verbose_name="昵称")
     email = models.EmailField(blank=True, null=True, verbose_name="邮箱")
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 
-    objects = CustomUserManager()
+    objects = CustomUserManager()  # 配置管理类
 
     USERNAME_FIELD = 'username'  # 使用手机号登录
     REQUIRED_FIELDS = ['nickname']  # 创建 superuser 时需要的字段
