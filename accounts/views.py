@@ -87,6 +87,25 @@ class UserProfileAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class SendVerificationCodeView(APIView):
+    @extend_schema(
+        description="发送手机验证码",
+        request=SendCodeSerializer,
+        responses={200: {"type": "object", "properties": {"message": {"type": "string"}}}}
+    )
+    def post(self, request):
+        serializer = SendCodeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        phone = serializer.validated_data['phone']
+        
+        # 调用服务层
+        result = send_verification_code_service(phone)
+        
+        if result['success']:
+            return Response({'message': result['message']}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': result['message']}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

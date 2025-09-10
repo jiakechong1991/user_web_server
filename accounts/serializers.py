@@ -2,6 +2,16 @@
 from rest_framework import serializers
 from .models import UserProfile, CustomUser
 from datetime import date 
+import re
+
+
+class SendCodeSerializer(serializers.Serializer):
+    phone = serializers.CharField(max_length=11)
+
+    def validate_phone(self, value):
+        if not re.match(r'^1[3-9]\d{9}$', value):
+            raise serializers.ValidationError("请输入有效的11位手机号")
+        return value
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
