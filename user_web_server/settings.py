@@ -62,6 +62,9 @@ INSTALLED_APPS = [
     'dj_rest_auth',  # 基于 DRF，提供 login/logout 接口
     'dj_rest_auth.registration', # 提供注册接口
     
+    # 速率限制app
+    'django_ratelimit',
+    
     ###我们自己的app(app_name.apps.AppLearnConfig[apps.py里的类名])
     'app_learn',  # 学习app
     'accounts', # 用户管理app
@@ -88,7 +91,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',  # 要求所有API都开启登录验证
-    ],
+    ]
 }
 
 from datetime import timedelta
@@ -171,6 +174,25 @@ WSGI_APPLICATION = 'user_web_server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+# # 使用 Redis 作为缓存后端（推荐）
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
+# django启动时会进行一些列检查，SILENCED_SYSTEM_CHECKS描述哪些 信号 可以忽略
+# django_ratelimit.E003 是 django_ratelimit的自检 003错误
+SILENCED_SYSTEM_CHECKS = ['django_ratelimit.E003']
 
 DATABASES = {
     'default': {

@@ -11,6 +11,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 from .serializers import UserProfileSerializer
 from .serializers import SendCodeSerializer
 from .serializers import RegisterSerializer
@@ -91,8 +93,17 @@ class UserProfileAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@method_decorator([
+    # 限制手机号：1分钟1次
+    ratelimit(key='post:phone', rate='1/m', method='POST', block=True),
+    # 限制IP：1小时5次
+    ratelimit(key='ip', rate='5/h', method='POST', block=True),
+    # 限制全局：1分钟10次（防DDoS）
+    ratelimit(key='header:x-real-ip', rate='10/m', method='POST', block=True),
+], name='dispatch')
 class SendVerificationCodeView(APIView):
     """请求server发送验证码"""
+    # 因为我们在settings.py中配置了所有API都要认证，这里我们对该接口取消认证
     permission_classes = [AllowAny]  # 允许任何人访问
     authentication_classes = []      # 不进行任何身份认证（可选，更彻底）
     serializer_class = SendCodeSerializer  # 指定序列化器
