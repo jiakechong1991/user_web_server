@@ -18,7 +18,7 @@ urlpatterns = [
     # # 其他如 logout 等仍可用 dj-rest-auth
     path('api-auth/', include('rest_framework.urls')), # DRF 自带的登录页面（用于调试）
     path('api/auth/', include('dj_rest_auth.urls')), # 真正的 API 登录接口
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
+    # path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     # path需要两个入参：route字符串和view函数
     path('api/accounts/', include('accounts.urls')),
     path('app_learn/', include('app_learn.urls')),

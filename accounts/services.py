@@ -1,14 +1,14 @@
 # accounts/services.py
-from utils.verification import generate_code, store_code
-from utils.sms import send_verification_code
+from utils.verification_code import generate_code, store_code, send_verification_code
+
 
 def send_verification_code_service(phone: str) -> dict:
     """
     生成验证码 + 存储 + 发送
     返回: {'success': True, 'message': '...'}
     """
-    code = generate_code()
-    store_code(phone, code)
+    code = generate_code()  # 生成验证码
+    store_code(phone, code)  # 存储验证码
 
     # 发送短信（同步 or 异步？见下文）
     sent = send_verification_code(phone, code)

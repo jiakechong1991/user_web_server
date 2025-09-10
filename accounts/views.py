@@ -8,10 +8,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
 from .serializers import UserProfileSerializer
-from .models import UserProfile
+from .serializers import SendCodeSerializer
+from .serializers import RegisterSerializer
+from .services import  send_verification_code_service
+from .models import UserProfile, CustomUser
 # Create your views here.
 
 
@@ -82,25 +86,33 @@ class UserProfileAPIView(APIView):
         # 反序列化：从data--->UserProfile
         serializer = self.serializer_class(profile, data=request.data, partial=partial)
         if serializer.is_valid(): # 调用 is_valid() 会触发所有校验，包括 validate_ 的所有方法
-            serializer.save()
+            serializer.save()  # 调用序列化器的 update()方法
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SendVerificationCodeView(APIView):
-    @extend_schema(
-        description="发送手机验证码",
-        request=SendCodeSerializer,
-        responses={200: {"type": "object", "properties": {"message": {"type": "string"}}}}
-    )
-    def post(self, request):
-        serializer = SendCodeSerializer(data=request.data)
+    """请求server发送验证码"""
+    permission_classes = [AllowAny]  # 允许任何人访问
+    authentication_classes = []      # 不进行任何身份认证（可选，更彻底）
+    serializer_class = SendCodeSerializer  # 指定序列化器
+    
+    @extend_schema(description="发送手机验证码")
+    def post(self, request, *args, **kwargs):
+        ###这里提出一个自问自答：
+        ###为什么上面UserProfileAPIView 这样写：
+        # serializer = self.serializer_class(profile, data=request.data, partial=partial)
+        # 这是因为：self.serializer_class 有几个入参： instance,data,partial,context,many
+        # 源码定义：(instance=None, data=empty, **kwargs)
+        # 场景：如果你要创建/更新对象 那就传instance
+        # 场景：如果你只是验证数据，那就不用传instance
+        
+        serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         phone = serializer.validated_data['phone']
-        
-        # 调用服务层
+        # 调用验证码发送服务
         result = send_verification_code_service(phone)
         
         if result['success']:
@@ -109,3 +121,20 @@ class SendVerificationCodeView(APIView):
             return Response({'error': result['message']}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class RegisterView(APIView):
+    """注册视图 """
+    permission_classes = [AllowAny]  # 允许任何人访问
+    authentication_classes = []      # 不进行任何身份认证（可选，更彻底）
+    serializer_class = RegisterSerializer  # 指定序列化器
+    
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        user = CustomUser.objects.create_user(
+            username=serializer.validated_data['phone'],
+            password=serializer.validated_data['password']
+        )
+
+        return Response({"message": "注册成功"}, status=201)
