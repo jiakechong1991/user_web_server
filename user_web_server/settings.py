@@ -81,6 +81,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # allauth模块的中间件
     "allauth.account.middleware.AccountMiddleware",
+    
+    # 限流异常捕获 ← 放在靠后位置（在 AuthenticationMiddleware 之后）
+    'accounts.middleware.RatelimitJsonMiddleware',  
+
 ]
 
 REST_FRAMEWORK = {
