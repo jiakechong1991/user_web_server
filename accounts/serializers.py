@@ -25,7 +25,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'username', 'updated_at']  # 用户不能修改这些
     
-    ## 这些validate_ 开头的方法，会自动被 xx.is_valid() 调用时，自动调用
+    ## 所有validate_ 开头的方法，会在 实例.is_valid() 调用时，自动扫描调用
     def validate_nickname(self, value):
         if len(value) < 2:
             raise serializers.ValidationError("昵称至少2个字符")

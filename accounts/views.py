@@ -18,16 +18,6 @@ from .models import UserProfile
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def user_profile(request):
-    user = request.user
-    return Response({
-        'usrename': user.username,
-        'date_joined': user.date_joined
-    })
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def access_token_check(request):
     """一个简单的高速接口，帮助测试 access token 是否有效"""
     user = request.user
@@ -38,9 +28,9 @@ def access_token_check(request):
 
 
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]  
 
-    @extend_schema(
+    @extend_schema( # 这是API文档生成器，生成接口文档用。不影响实际逻辑
         description="将 refresh token 加入黑名单，实现真正登出"
     )
     def post(self, request):
@@ -54,10 +44,10 @@ class LogoutView(APIView):
 
 
 class UserProfileAPIView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated] # 权限控制器
+    serializer_class = UserProfileSerializer  # 指定序列化器
 
-    def get_object(self):
+    def _get_object(self):
         # 获取当前用户的 UserProfile，不存在则返回 404（理论上不会，因为信号已自动创建）
         try:
             return self.request.user.profile
@@ -70,14 +60,16 @@ class UserProfileAPIView(APIView):
                 birthday='1990-01-01',
                 signature="这家伙很懒，什么也没留下~"
             )
+    
+    # 多种http方法支持（这个几个方法很特殊，是系统默认支持的）
     def get(self, request, *args, **kwargs):
         """读取当前用户资料"""
-        profile = self.get_object()
-        serializer = self.serializer_class(profile)
+        profile = self._get_object()
+        serializer = self.serializer_class(profile)  # 序列化
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        """完全更新用户资料"""
+        """完全更新用户资料, 所有字段都必须提供"""
         return self._update(request, partial=False)
 
     def patch(self, request, *args, **kwargs):
@@ -86,8 +78,8 @@ class UserProfileAPIView(APIView):
 
     def _update(self, request, partial=False):  
         """更新用户资料的底层接口"""
-        profile = self.get_object()  # 获取当前用户的 UserProfile
-        # 创建序列化器，并传入当前用户的 UserProfile
+        profile = self._get_object()  # 获取当前用户的 UserProfile
+        # 反序列化：从data--->UserProfile
         serializer = self.serializer_class(profile, data=request.data, partial=partial)
         if serializer.is_valid(): # 调用 is_valid() 会触发所有校验，包括 validate_ 的所有方法
             serializer.save()

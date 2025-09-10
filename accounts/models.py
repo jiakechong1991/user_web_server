@@ -68,14 +68,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = CustomUserManager()  # 配置管理类
+    
+    #默认情况下，Django 所有模型都有一个 objects = models.Manager()，用于执行数据库查询（如 User.objects.all()）
+    #因为你继承的是 AbstractBaseUser，它不包含默认的 create_user() 和 create_superuser() 方法 
+    # —— 而这些方法是 Django 用户系统（尤其是命令行[python manage.py createsuperuser]和 Admin）必须依赖的。
+    
 
-    USERNAME_FIELD = 'username'  # 使用手机号登录
-    REQUIRED_FIELDS = ['nickname']  # 创建 superuser 时需要的字段
+    USERNAME_FIELD = 'username'  # 指定 这个字段 作为 登录时用的唯一标识字段
+    # 
+    # REQUIRED_FIELDS = ['nickname']  # 创建 superuser时需要的其他字段(必须是CustomUser有的字段)
 
-    def __str__(self):
+    def __str__(self): # 控制print时，该类对象的显示字符串
         return self.username
 
-    class Meta:
+    class Meta:  # 用于控制在django admin中显示 这个类的名称
+        # （Django Admin 自动生成界面时，会读取 Meta 类中的这些配置）
         verbose_name = "用户"
         verbose_name_plural = "用户"
 

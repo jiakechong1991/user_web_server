@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
 # Register your models here.
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):  # 这是让django admin后台 中用的信息
     # 显示在用户列表中的字段
     list_display = ('username', 'email', 'is_staff', 'is_active', 'date_joined')
     
@@ -29,4 +29,5 @@ class CustomUserAdmin(UserAdmin):
 
 
 # 注册模型
+#                      模型类，管理类
 admin.site.register(CustomUser, CustomUserAdmin)

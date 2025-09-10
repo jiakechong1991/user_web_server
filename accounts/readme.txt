@@ -49,10 +49,6 @@ curl -X POST http://127.0.0.1:5609/api/auth/login/   -H "Content-Type: applicati
     "password": "new12345678"
   }'
 
-#查看用户信息： 
- curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3MzQwNjkyLCJpYXQiOjE3NTczMzk3OTIsImp0aSI6ImQ4ZjNlMGM0N2Y4YjQ3ZjhiMzNmNzUyOGRmYjc5NTA3IiwidXNlcl9pZCI6IjEifQ.HGSZUhGXERC8fv0nfX_7i01ZokKJnzeiK5W_493ADb0"   "http://127.0.0.1:5609/api/accounts/profile/"
-
-
 注册：/api/auth/registration/
 curl -X POST http://127.0.0.1:5609/api/auth/registration/ \
   -H "Content-Type: application/json" \
@@ -91,3 +87,25 @@ curl -X POST http://127.0.0.1:5609/api/auth/password/change/ \
     "new_password1": "new12345678",
     "new_password2": "new12345678"
   }'
+
+
+
+###查询用户的信息（只要带着自己的token就行）
+ curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI3Njg4LCJpYXQiOjE3NTc0MjY3ODgsImp0aSI6ImFmNzMxN2MxYjQ4MDQ5MTVhZjdhNDVkZDYwMmE3ZGY2IiwidXNlcl9pZCI6IjEifQ.0o9NQoDfwZ5swvvRnGEBiMlALzTsTfmPwmPgqLL3tEw"   "http://127.0.0.1:5609/api/accounts/profile/"
+
+####更新资料
+curl -X PATCH http://127.0.0.1:5609/api/accounts/profile/ \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI1NTE2LCJpYXQiOjE3NTc0MjQ2MTYsImp0aSI6IjMwMzYyZjkyZjU0NTQzOTE4MGMzYmFhYzYyM2RlZmQyIiwidXNlcl9pZCI6IjEifQ.COQIVRf3I8QefDp2AmCGTsOUAOks2kmdAOuyxTmrYKs" \
+  -H "Content-Type: application/json" \
+  -d '{"nickname": "我的新昵称", "signature": "我的新个性签名"}'
+
+
+###上传头像
+curl -X PATCH http://127.0.0.1:5609/api/accounts/profile/ \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI3MDk0LCJpYXQiOjE3NTc0MjYxOTUsImp0aSI6ImZlNGQ4N2Y0YzU1NTRiZWU5MmFlN2JiODQ4OGJjMGNjIiwidXNlcl9pZCI6IjEifQ.Ip21SbXrmcFKKCYlAcFJCwHhhYl9Af56vCgFVdycZyo" \
+  -F "nickname=带头像更新" \
+  -F "avatar=@/home/wxk/project/role_play/user_web_server/static/chen.jpg"
+
+#####访问头像
+/media/avatar/chen.jpg
+http://a2.richudongfang1642.cn:7902/media/avatar/chen.jpg
