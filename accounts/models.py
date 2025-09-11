@@ -1,48 +1,41 @@
 # accounts/models.py
-import re
-from django.core.exceptions import ValidationError
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
-def validate_mobile(value):
-    """校验手机号格式"""
-    if not re.match(r'^1[3-9]\d{9}$', value):
-        raise ValidationError('请输入有效的11位中国大陆手机号')
-
-def validate_birthday(self, value):
-    from datetime import date
-    if value > date.today():
-        raise serializers.ValidationError("生日不能是未来日期")
-    return value
-
-def validate_nickname(self, value):
-    if len(value) < 2:
-        raise serializers.ValidationError("昵称至少2个字符")
-    return value
+from django.core.validators import MinLengthValidator, MaxLengthValidator
+from .validators import validate_mobile,validate_username
 
 # 我们将用户模型，拆分成两个模型， 一个是用户模型(用于登录验证)， 一个是用户信息模型
 # 认证归认证，资料归资料，解耦和开
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, password, email=None):
+    def create_user(self, username, password, phone, email=None):
         if not username:
+            raise ValueError('必须提供用户名')
+        if not phone:  
             raise ValueError('必须提供手机号')
 
         email = self.normalize_email(email) if email else None
 
         user = self.model(
             username=username,
+            phone=phone,
             email=email
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password, email=None):
+    def create_superuser(self, username, password, phone, email=None):
+        if not username:
+            raise ValueError('必须提供用户名')
+        if not phone:  
+            raise ValueError('必须提供手机号')
         user = self.create_user(
             username=username,
             password=password,
+            phone=phone,
             email=email or f'{username}@admin.local'
         )
         user.is_staff = True
@@ -53,10 +46,20 @@ class CustomUserManager(BaseUserManager):
 # django只提供了“骨架”用户模型(AbstractBaseUser)， 但是不包含创建用户方法， 
 # 创建用户模型时，需要继承 AbstractBaseUser， 也必须继承后user的Manager类，辅助创建用户
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    # ✅ 唯一字段：username，既是登录账号，也是手机号
+    # 唯一字段：username，既是登录账号
     username = models.CharField(
+        max_length=16,
+        primary_key=True,
+        unique=True,  # 唯一字段,不允许重复
+        verbose_name="账户名称",
+        help_text="中英文数字混合",
+        validators=[MinLengthValidator(8), MaxLengthValidator(16), validate_username]  # 强制格式校验
+    )
+    phone = models.CharField(
         max_length=11,
-        unique=True,
+        # unique=True,  # 电话号码 后期可能修改
+        # null=True, # 允许为空
+        #  blank=True, # 允许表单为空
         verbose_name="手机号",
         help_text="请输入11位中国大陆手机号",
         validators=[validate_mobile]  # 强制格式校验
@@ -76,7 +79,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'  # 指定 这个字段 作为 登录时用的唯一标识字段
     # 
-    # REQUIRED_FIELDS = ['nickname']  # 创建 superuser时需要的其他字段(必须是CustomUser有的字段)
+    REQUIRED_FIELDS = ['phone']  # 创建 superuser时需要的其他字段(必须是CustomUser有的字段)
 
     def __str__(self): # 控制print时，该类对象的显示字符串
         return self.username

@@ -118,10 +118,12 @@ class SendVerificationCodeView(APIView):
         # 场景：如果你要创建/更新对象 那就传instance
         # 场景：如果你只是验证数据，那就不用传instance
         
+        # 先用序列化器验证数据
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        # 然后执行view逻辑
         phone = serializer.validated_data['phone']
         # 调用验证码发送服务
         result = send_verification_code_service(phone)
@@ -144,7 +146,8 @@ class RegisterView(APIView):
             return Response(serializer.errors, status=400)
 
         user = CustomUser.objects.create_user(
-            username=serializer.validated_data['phone'],
+            username=serializer.validated_data['username'],
+            phone=serializer.validated_data['phone'],
             password=serializer.validated_data['password']
         )
 
