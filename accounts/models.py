@@ -52,7 +52,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         primary_key=True,
         unique=True,  # 唯一字段,不允许重复
         verbose_name="账户名称",
-        help_text="中英文数字混合",
+        help_text="英文数字混合",
         validators=[MinLengthValidator(8), MaxLengthValidator(16), validate_username]  # 强制格式校验
     )
     phone = models.CharField(
@@ -79,7 +79,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'  # 指定 这个字段 作为 登录时用的唯一标识字段
     # 
-    REQUIRED_FIELDS = ['phone']  # 创建 superuser时需要的其他字段(必须是CustomUser有的字段)
+    REQUIRED_FIELDS = ['phone']  # 创建 账户时必须要提供的其他字段(必须是CustomUser有的字段)
 
     def __str__(self): # 控制print时，该类对象的显示字符串
         return self.username
