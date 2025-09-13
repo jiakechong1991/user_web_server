@@ -4,6 +4,7 @@ from .models import UserProfile, CustomUser
 from datetime import date 
 import re
 from utils.verification_code import verify_code
+from .validators import validate_username
 """
 #如果是继承serializers.ModelSerializer,就要定义 Meta类
     ModelSerializer 需要知道“绑定哪个model模型”，所以靠 Meta.model
@@ -90,6 +91,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.Serializer):
     # 重新定义这几个字段的序列化行为（附带基本的验证）
+    username = serializers.CharField(validators=[validate_username])
     phone = PhoneNumberField() # phone的默认验证
     code = serializers.CharField(min_length=6, max_length=6)
     password = serializers.CharField(min_length=6)
