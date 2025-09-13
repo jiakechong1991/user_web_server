@@ -23,6 +23,8 @@ class AgentProfileListCreateAPIView(APIView):
             # 关联当前用户
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        print(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

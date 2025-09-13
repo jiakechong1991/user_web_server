@@ -8,7 +8,7 @@ class AgentProfile(models.Model):
     # CASCADE: 删除用户，则自动删除用户资料
     # ForeignKey:一对多
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='agent_profile', verbose_name="所属用户")
-    agent_name = models.CharField(max_length=20, verbose_name="昵称")
+    agent_name = models.CharField(unique=True, max_length=20, verbose_name="昵称")
     avatar = models.ImageField(upload_to='avatar', verbose_name="头像")
     sex = models.CharField(max_length=1, choices=(('m', '男'), ('f', '女')), verbose_name="性别")
     birthday = models.DateField(verbose_name="生日")
