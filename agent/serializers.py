@@ -6,7 +6,7 @@ from datetime import date
 class AgentProfileSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(source='user.username', read_only=True)
-    avatar = serializers.ImageField(use_url=True)
+    avatar = serializers.ImageField(use_url=True, required=False)
     class Meta:
         model = AgentProfile
         fields = [  # 指定哪些字段 参与 序列化/反序列化

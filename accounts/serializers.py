@@ -39,7 +39,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     # UserProfile中有这个字段，但是 序列化器 自动生成的 ImageField 行为不符合你的需求， 我们告诉DRF框架，
     #    需要这个字段序列化时，是完整的 图片url
-    avatar = serializers.ImageField(use_url=True)
+    avatar = serializers.ImageField(use_url=True, required=False)
     class Meta:
         model = UserProfile
         fields = [  # 指定哪些字段 参与 序列化/反序列化

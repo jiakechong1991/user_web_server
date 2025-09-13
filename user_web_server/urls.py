@@ -22,7 +22,7 @@ urlpatterns = [
     # path('api/auth/registration/', include('dj_rest_auth.registration.urls')),
     # path需要两个入参：route字符串和view函数
     path('api/accounts/', include('accounts.urls')),
-    path('api/agent/', include('agent.urls')),
+    path('api/agents/', include('agent.urls')),
     path('app_learn/', include('app_learn.urls')),
 ]
 

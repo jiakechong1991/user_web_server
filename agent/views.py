@@ -59,7 +59,7 @@ class AgentProfileDetailAPIView(APIView):
         if not agent_profile:
             return Response({"detail": "角色不存在或无权限访问"}, status=status.HTTP_404_NOT_FOUND)
         agent_profile.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail": "角色已经删除"}, status=status.HTTP_200_OK)
 
     def _update(self, request, pk, partial=False):
         agent_profile = self.get_object(pk)
