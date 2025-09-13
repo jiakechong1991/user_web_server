@@ -1,6 +1,7 @@
 # accounts/signals.py
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import transaction
 from .models import CustomUser, UserProfile
 
 
@@ -18,11 +19,13 @@ def create_user_profile(sender, instance, created, **kwargs):  # 你自定义的
 
     """
     if created: # 只有新建用户时才创建资料，避免重复创建
-        UserProfile.objects.create(  # 创建并关联资料对象
-            user=instance,
-            nickname=f"用户{instance.username}",
-            sex='m',
-            birthday='1990-01-01',
-            signature="这家伙很懒，什么也没留下~",
-            # avatar 可以留空，或设置默认头像路径
+        transaction.on_commit(  # 延时执行，等数据库操作成功提交后 才执行
+            lambda: UserProfile.objects.create(  # 创建并关联资料对象
+                user=instance,
+                nickname=f"用户{instance.username}",
+                sex='m',
+                birthday='1990-01-01',
+                signature="这家伙很懒，什么也没留下~",
+                # avatar 可以留空，或设置默认头像路径
+            )
         )

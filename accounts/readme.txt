@@ -44,13 +44,13 @@ python manage.py flushexpiredtokens   # 将其挂到crontab上，每天定期进
 
 
 #登录：
-curl -X POST http://127.0.0.1:5609/api/auth/login/   -H "Content-Type: application/json"   -d '{
-    "username": "15313988691",
-    "password": "new12345678"
+curl -X POST http://192.168.0.102:5609/api/auth/login/   -H "Content-Type: application/json"   -d '{
+    "username": "jiakechong1991",
+    "password": "qq16421225"
   }'
 
 注册：/api/auth/registration/
-curl -X POST http://127.0.0.1:5609/api/auth/registration/ \
+curl -X POST http://192.168.0.102:5609/api/auth/registration/ \
   -H "Content-Type: application/json" \
   -d '{
     "username": "15313988692",
@@ -62,7 +62,7 @@ curl -X POST http://127.0.0.1:5609/api/auth/registration/ \
 重置密码：/api/auth/password/reset/
 
 刷新：
-curl -X POST http://127.0.0.1:5609/api/auth/refresh/ \
+curl -X POST http://192.168.0.102:5609/api/auth/refresh/ \
   -H "Content-Type: application/json" \
   -d '{
     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc1Nzk0NDU5MiwiaWF0IjoxNzU3MzM5NzkyLCJqdGkiOiIyMTNiZDgwZGYyOTI0Mzc1YTUyNjU2NmMyNzUzMjBmNiIsInVzZXJfaWQiOiIxIn0.wkgfOjtRmv3LU7G0Xgd5VwYsBCB6eY9YUKCbKvQ_Uzg"
@@ -70,7 +70,7 @@ curl -X POST http://127.0.0.1:5609/api/auth/refresh/ \
 
 登出：  /api/auth/logout/
 
- curl -X POST http://127.0.0.1:5609/api/auth/logout/ \
+ curl -X POST http://192.168.0.102:5609/api/auth/logout/ \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3MzM4OTY4LCJpYXQiOjE3NTczMzcxNjgsImp0aSI6IjA2MDQ0OTk3ZWU0NDRmN2Y5YWQ4MDkxZDc1NzVkMTUyIiwidXNlcl9pZCI6IjEifQ.BZigq7SNw1Q9XRYPwYUUwEGutKVJqQW8SCqyxnV4aJY" \
   -d '{
@@ -79,7 +79,7 @@ curl -X POST http://127.0.0.1:5609/api/auth/refresh/ \
 
 
 修改密码： 
-curl -X POST http://127.0.0.1:5609/api/auth/password/change/ \
+curl -X POST http://192.168.0.102:5609/api/auth/password/change/ \
   -H "Content-Type: application/json" \
   -H "Authorization:  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3MzM4OTY4LCJpYXQiOjE3NTczMzcxNjgsImp0aSI6IjA2MDQ0OTk3ZWU0NDRmN2Y5YWQ4MDkxZDc1NzVkMTUyIiwidXNlcl9pZCI6IjEifQ.BZigq7SNw1Q9XRYPwYUUwEGutKVJqQW8SCqyxnV4aJY" \
   -d '{
@@ -91,17 +91,17 @@ curl -X POST http://127.0.0.1:5609/api/auth/password/change/ \
 
 
 ###查询用户的信息（只要带着自己的token就行）
- curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI3Njg4LCJpYXQiOjE3NTc0MjY3ODgsImp0aSI6ImFmNzMxN2MxYjQ4MDQ5MTVhZjdhNDVkZDYwMmE3ZGY2IiwidXNlcl9pZCI6IjEifQ.0o9NQoDfwZ5swvvRnGEBiMlALzTsTfmPwmPgqLL3tEw"   "http://127.0.0.1:5609/api/accounts/profile/"
+ curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI3Njg4LCJpYXQiOjE3NTc0MjY3ODgsImp0aSI6ImFmNzMxN2MxYjQ4MDQ5MTVhZjdhNDVkZDYwMmE3ZGY2IiwidXNlcl9pZCI6IjEifQ.0o9NQoDfwZ5swvvRnGEBiMlALzTsTfmPwmPgqLL3tEw"   "http://192.168.0.102:5609/api/accounts/profile/"
 
 ####更新资料
-curl -X PATCH http://127.0.0.1:5609/api/accounts/profile/ \
+curl -X PATCH http://192.168.0.102:5609/api/accounts/profile/ \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI1NTE2LCJpYXQiOjE3NTc0MjQ2MTYsImp0aSI6IjMwMzYyZjkyZjU0NTQzOTE4MGMzYmFhYzYyM2RlZmQyIiwidXNlcl9pZCI6IjEifQ.COQIVRf3I8QefDp2AmCGTsOUAOks2kmdAOuyxTmrYKs" \
   -H "Content-Type: application/json" \
   -d '{"nickname": "我的新昵称", "signature": "我的新个性签名"}'
 
 
 ###上传头像
-curl -X PATCH http://127.0.0.1:5609/api/accounts/profile/ \
+curl -X PATCH http://192.168.0.102:5609/api/accounts/profile/ \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NDI3MDk0LCJpYXQiOjE3NTc0MjYxOTUsImp0aSI6ImZlNGQ4N2Y0YzU1NTRiZWU5MmFlN2JiODQ4OGJjMGNjIiwidXNlcl9pZCI6IjEifQ.Ip21SbXrmcFKKCYlAcFJCwHhhYl9Af56vCgFVdycZyo" \
   -F "nickname=带头像更新" \
   -F "avatar=@/home/wxk/project/role_play/user_web_server/static/chen.jpg"

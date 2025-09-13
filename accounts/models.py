@@ -49,7 +49,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     # 唯一字段：username，既是登录账号
     username = models.CharField(
         max_length=16,
-        primary_key=True,
+        # primary_key=True,
         unique=True,  # 唯一字段,不允许重复
         verbose_name="账户名称",
         help_text="英文数字混合",
