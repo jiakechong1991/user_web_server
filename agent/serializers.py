@@ -16,9 +16,8 @@ class AgentProfileSerializer(serializers.ModelSerializer):
             'avatar',
             'sex',
             'birthday',
-            'signature',
-            'hobby',
-            'updated_at',
+            'age',
+            'character_setting',
         ]
         read_only_fields = ['id', 'username', 'updated_at']  # 这些字段 用户不能修改
     
@@ -27,10 +26,12 @@ class AgentProfileSerializer(serializers.ModelSerializer):
         if len(value) < 2:
             raise serializers.ValidationError("昵称至少2个字符")
         return value
-    def validate_birthday(self, value):
-        if value > date.today():
-            raise serializers.ValidationError("生日不能是未来日期")
-        return value  # 校验通过，必须返回原值或修正后的值
+    
+    ####只要是有效的生日都行，因为可能是架空的角色
+    # def validate_birthday(self, value):
+    #     if value > date.today():
+    #         raise serializers.ValidationError("生日不能是未来日期")
+    #     return value  # 校验通过，必须返回原值或修正后的值
     
     def create(self, validated_data):
         # 确保 user 由视图传入，不在 API 中暴露
@@ -52,3 +53,5 @@ class AgentProfileSerializer(serializers.ModelSerializer):
 
         instance.save()  # 保存到数据库
         return instance
+
+        

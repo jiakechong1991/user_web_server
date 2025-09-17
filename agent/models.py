@@ -12,10 +12,11 @@ class AgentProfile(models.Model):
     avatar = models.ImageField(upload_to='avatar', verbose_name="头像")
     sex = models.CharField(max_length=1, choices=(('m', '男'), ('f', '女')), verbose_name="性别")
     birthday = models.DateField(verbose_name="生日")
+    age = models.IntegerField(verbose_name="年龄")
     # 不是所有角色都是现代的哈
     # education = models.CharField(max_length=50, blank=True, verbose_name="学历")
-    signature = models.CharField(max_length=500, verbose_name="性格")
-    hobby = models.CharField(max_length=500, blank=True, verbose_name="爱好")
+    # 最后我们利用LLM来从人设 中 进行结构化
+    character_setting = models.CharField(max_length=500, verbose_name="人设")
     
     updated_at = models.DateTimeField(auto_now=True)  # 更新时间
 

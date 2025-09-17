@@ -1,5 +1,7 @@
 # accounts/models.py
 
+from datetime import datetime
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.validators import MinLengthValidator, MaxLengthValidator
@@ -96,14 +98,29 @@ class UserProfile(models.Model):
     avatar = models.ImageField(upload_to='avatar', verbose_name="头像")
     sex = models.CharField(max_length=1, choices=(('m', '男'), ('f', '女')), verbose_name="性别")
     birthday = models.DateField(verbose_name="生日")
-    education = models.CharField(max_length=50, blank=True, verbose_name="学历")
-    signature = models.CharField(max_length=100, verbose_name="个性签名")
-    hobby = models.CharField(max_length=100, blank=True, verbose_name="爱好")
-    
+    # education = models.CharField(max_length=50, blank=True, verbose_name="学历")
+    character_setting = models.CharField(max_length=500, verbose_name="自我介绍")
+    # hobby = models.CharField(max_length=100, blank=True, verbose_name="爱好")
+    # django默认存储的是UTC 时间（协调世界时），如果你要显示中国时间，要手动转换
     updated_at = models.DateTimeField(auto_now=True)  # 更新时间
 
     def __str__(self):
         return f"{self.user.username} 的资料"
+    
+    def to_dict(self):
+        return {
+            "user_name": self.user.username,
+            "agent_id": "",  # 这是为了后面兼容agent的 person ES数据格式
+            "name": self.nickname,
+            "sex": self.get_sex_display(),
+            # 当前时间减去生日的时间年差
+            "age": datetime.now().year - self.birthday.year if self.birthday else "",
+            "birthday": self.birthday.strftime("%Y年%m月%d日") if self.birthday else "",
+            "character_setting": self.character_setting,
+            # 将时间按照时区转换为当前时区
+            "create_time": timezone.localtime(self.updated_at).strftime("%Y-%m-%d %H:%M:%S"),
+            "update_time": timezone.localtime(self.updated_at).strftime("%Y-%m-%d %H:%M:%S"),
+        }
 
 
 

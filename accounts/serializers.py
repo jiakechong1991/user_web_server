@@ -49,9 +49,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'avatar',
             'sex',
             'birthday',
-            'education',
-            'signature',
-            'hobby',
+            # 'education',
+            'character_setting',
+            # 'hobby',
             'updated_at',
         ]
         read_only_fields = ['id', 'username', 'updated_at']  # 这些字段 用户不能修改
