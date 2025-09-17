@@ -23,8 +23,8 @@ class AgentProfileListCreateAPIView(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             # 关联当前用户
-            serializer.save(user=request.user)
-            create_person_info_es() # 将agent资料写入es中
+            agent_profile:AgentProfile = serializer.save(user=request.user)
+            create_person_info_es(agent_profile.to_dict()) # 将agent资料写入es中
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         print(f"Serializer errors: {serializer.errors}")
