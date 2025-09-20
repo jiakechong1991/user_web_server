@@ -14,7 +14,7 @@ class AgentProfileListCreateAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         """获取当前用户的所有角色列表"""
-        agent_profiles = AgentProfile.objects.filter(user=request.user)
+        agent_profiles = AgentProfile.objects.filter(user=request.user, is_deleted=False)
         serializer = self.serializer_class(agent_profiles, many=True)  # 注意 many=True
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -36,9 +36,9 @@ class AgentProfileDetailAPIView(APIView):
     serializer_class = AgentProfileSerializer
 
     def get_object(self, pk):
-        """获取指定 ID 的角色，并确保属于当前用户"""
+        """获取指定 ID 的角色（未删除），并确保属于当前用户"""
         try:
-            return AgentProfile.objects.get(pk=pk, user=self.request.user)
+            return AgentProfile.objects.get(pk=pk, user=self.request.user, is_deleted=False)
         except AgentProfile.DoesNotExist:
             return None
 
@@ -63,8 +63,9 @@ class AgentProfileDetailAPIView(APIView):
         agent_profile = self.get_object(pk)
         if not agent_profile:
             return Response({"detail": "角色不存在或无权限访问"}, status=status.HTTP_404_NOT_FOUND)
-        agent_profile.delete()
-        return Response({"detail": "角色已经删除"}, status=status.HTTP_200_OK)
+        agent_profile.is_deleted = True
+        agent_profile.save(update_fields=['is_deleted'])  # 避免不必要的 full save
+        return Response({"detail": f"角色:{agent_profile.agent_name}  id: {agent_profile.id} 已经删除"}, status=status.HTTP_200_OK)
 
     def _update(self, request, pk, partial=False):
         agent_profile = self.get_object(pk)

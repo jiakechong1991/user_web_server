@@ -1,4 +1,8 @@
 
+curl -X POST http://192.168.0.102:5609/api/auth/login/   -H "Content-Type: application/json"   -d '{
+    "username": "jiakechong1991",
+    "password": "qq16421225"
+  }'
 
 ###获取agent 列表
 curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzU3NzMzNTk3LCJpYXQiOjE3NTc3MzI2OTcsImp0aSI6IjE2OTQ5NDA0ZDJmZjQ4MGJiMjFmNTM4YzAwMTBjYjI3IiwidXNlcl9pZCI6IjEifQ.ZhMFtBTzMwD23ROmRpoCuhzrKBvDnxLBGBcUu0Lu5Oo"   "http://192.168.0.102:5609/api/agents/"

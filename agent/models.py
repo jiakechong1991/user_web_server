@@ -22,6 +22,7 @@ class AgentProfile(models.Model):
     character_setting = models.CharField(blank=True, null=True, max_length=500, verbose_name="人设")
     
     updated_at = models.DateTimeField(auto_now=True)  # 更新时间
+    is_deleted = models.BooleanField(default=False, verbose_name="是否软删除")
 
     def __str__(self):
         return f"{self.user.username}的role: {self.agent_name} 的资料"
